@@ -54,7 +54,7 @@ class TasklistsController extends Controller
         $tasklist->content = $request->content;
         $tasklist->save();
         
-        return redirect('/');
+        return redirect('/index');
     }
 
     /**
@@ -108,7 +108,7 @@ class TasklistsController extends Controller
         $tasklist->content = $request->content;
         $tasklist->save();
 
-        return redirect('/');
+        return redirect('/index');
     }
 
     /**
@@ -122,6 +122,6 @@ class TasklistsController extends Controller
         $tasklist = Tasklist::find($id);
         $tasklist->delete();
 
-        return redirect('/');
+        return redirect('/index');
     }
 }

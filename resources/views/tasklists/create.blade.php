@@ -28,6 +28,6 @@
     
 </div>
 
-
+{!! link_to_route('tasklists.show', 'メッセージを編集する', ['id' => $tasklist->id], ['class' => 'btn btn-default']) !!}
 
 @endsection

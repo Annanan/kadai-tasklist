@@ -15,12 +15,24 @@ class TasklistsController extends Controller
      */
     public function index()
     {
-        $tasklists = Tasklist::all();
-        
-        return view('tasklists.index', [
-            'tasklists' => $tasklists,
-            ]);
+        $deta = [];
+        if (\Auth::check()){
+            $user = \Auth::user();
+            $tasklists = $user->tasklists;
+             $data = [
+                'user' => $user,
+                'tasklists' => $tasklists,
+            ];
+            return view('users.show', $data);
+        }
+        else {
+            return view ('welcome');
+        }
     }
+}
+
+
+
 
     /**
      * Show the form for creating a new resource.

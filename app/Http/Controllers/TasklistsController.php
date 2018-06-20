@@ -148,19 +148,12 @@ class TasklistsController extends Controller
      */
     public function destroy($id)
     {
-        $tasklist = Tasklist::find($id);
-        
-         if(\Auth::user()->id() === $tasklist->user_id) {
-            $tasklist->delete();
-            
-            return view('tasklists.index',[
-           'tasklist' => $tasklist,
-     ]);
-    }
-    
-    else {
+         $tasklist = Tasklist::find($id);
+            if(\Auth::id() === $tasklist->user_id){
+        $tasklist->delete();
         return redirect('/');
+        }
     }
-    }
+
  
 }

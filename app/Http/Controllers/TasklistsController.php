@@ -41,18 +41,9 @@ class TasklistsController extends Controller
     public function create()
     {
          $tasklist = new Tasklist;
-        
-        
-        
-         if (\Auth::check()){
-            $user = \Auth::user();
-           
    
             return view('tasklists.create', ['tasklist' => $tasklist,]);
-        }
-        else {
-            return view ('welcome');
-        }
+
         
         
     }
@@ -91,20 +82,20 @@ class TasklistsController extends Controller
     public function show($id)
     {   
         $tasklist = Tasklist::find($id);
-        return view('tasklists.show', [
-            'tasklist' => $tasklist,
-        ]);
         
-        if (\Auth::check()){
-            $user = \Auth::user();
-            $tasklists = $user->tasklists;
-            
-            return view('tasklists.show',['tasklists' => $tasklists,]);
+        if (\Auth::id() === $tasklist->user_id){
+            $tasklist->show();
+        
+        return view('tasklists.show', [
+            'tasklists' => $tasklists,
+        ]);}
+        
+        else{
+            return view ('/');
         }
-        else {
-            return view ('welcome');
-        }
-    }
+        
+    
+        
 
     /**
      * Show the form for editing the specified resource.
@@ -118,24 +109,22 @@ class TasklistsController extends Controller
     {
         
   $tasklist = Tasklist::find($id);
+    
+    if(\Auth::id() === $tasklist->user_id) {
+        $tasklist->edit();
+  
        return view('tasklists.edit',[
            'tasklist' => $tasklist,
      ]);
+    }
+    
+    else {
+        return view('/');
+    }
  
 
      
-      
-        if (\Auth::check()){
-            $user = \Auth::user();
-            $tasklists = $user->tasklists;
-            
-            return view('tasklists.edit', ['tasklists' => $tasklists,]);
-        }
-        else {
-            return view ('welcome');
-        }
- 
-    }
+  
 
     /**
      * Update the specified resource in storage.
@@ -169,8 +158,17 @@ class TasklistsController extends Controller
     public function destroy($id)
     {
         $tasklist = Tasklist::find($id);
-        $tasklist->delete();
-
+        
+        if (\Auth::id() === $tasklist->user_id){
+            $tasklist->delete();
+            
+            return view('tasklists.index',[
+           'tasklist' => $tasklist,
+     ]);
+    }
+    
+    else {
         return redirect('/');
     }
+ 
 }

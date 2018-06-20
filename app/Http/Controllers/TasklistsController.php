@@ -88,11 +88,14 @@ class TasklistsController extends Controller
         
         return view('tasklists.show', [
             'tasklists' => $tasklists,
-        ]);}
+        ]);
+            
+        }
         
         else{
             return view ('/');
         }
+}
         
     
         
@@ -119,9 +122,9 @@ class TasklistsController extends Controller
     }
     
     else {
-        return view('/');
+        return redirect('/');
     }
- 
+}
 
      
   
@@ -169,6 +172,7 @@ class TasklistsController extends Controller
     
     else {
         return redirect('/');
+    }
     }
  
 }

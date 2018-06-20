@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\Controller;
+
 use App\Tasklist;
+
 
 class TasklistsController extends Controller
 {
@@ -15,22 +18,17 @@ class TasklistsController extends Controller
      */
     public function index()
     {
-        $deta = [];
+    
         if (\Auth::check()){
             $user = \Auth::user();
             $tasklists = $user->tasklists;
-             $data = [
-                'user' => $user,
-                'tasklists' => $tasklists,
-            ];
-            return view('users.show', $data);
+   
+            return view('tasklists.index', ['tasklists' => $tasklists,]);
         }
         else {
             return view ('welcome');
         }
     }
-}
-
 
 
 
@@ -39,13 +37,24 @@ class TasklistsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+     
     public function create()
     {
          $tasklist = new Tasklist;
-
-        return view('tasklists.create', [
-            'tasklist' => $tasklist,
-        ]);
+        
+        
+        
+         if (\Auth::check()){
+            $user = \Auth::user();
+           
+   
+            return view('tasklists.create', ['tasklist' => $tasklist,]);
+        }
+        else {
+            return view ('welcome');
+        }
+        
+        
     }
 
     /**
@@ -54,19 +63,23 @@ class TasklistsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+     
     public function store(Request $request)
     {
         $this->validate($request, [
             'status' => 'required|max:10',
             'content' => 'required|max:191',
             ]);
+            
+         $request->user()->tasklists()->create([
+            'status' => $request->status,
+             'content' => $request->content,
+             ]);
+            
+        return redirect('/');
+       
+       
         
-        $tasklist = new Tasklist;
-        $tasklist->status = $request->status;
-        $tasklist->content = $request->content;
-        $tasklist->save();
-        
-        return redirect('/index');
     }
 
     /**
@@ -76,12 +89,21 @@ class TasklistsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-         $tasklist = Tasklist::find($id);
-
+    {   
+        $tasklist = Tasklist::find($id);
         return view('tasklists.show', [
             'tasklist' => $tasklist,
         ]);
+        
+        if (\Auth::check()){
+            $user = \Auth::user();
+            $tasklists = $user->tasklists;
+            
+            return view('tasklists.show',['tasklists' => $tasklists,]);
+        }
+        else {
+            return view ('welcome');
+        }
     }
 
     /**
@@ -90,13 +112,28 @@ class TasklistsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+     
+     
     public function edit($id)
     {
-        $tasklist = Tasklist::find($id);
-
+        
+  $tasklist = Tasklist::find($id);
        return view('tasklists.edit',[
            'tasklist' => $tasklist,
      ]);
+ 
+
+     
+      
+        if (\Auth::check()){
+            $user = \Auth::user();
+            $tasklists = $user->tasklists;
+            
+            return view('tasklists.edit', ['tasklists' => $tasklists,]);
+        }
+        else {
+            return view ('welcome');
+        }
  
     }
 
@@ -120,7 +157,7 @@ class TasklistsController extends Controller
         $tasklist->content = $request->content;
         $tasklist->save();
 
-        return redirect('/index');
+        return redirect('/');
     }
 
     /**
@@ -134,6 +171,6 @@ class TasklistsController extends Controller
         $tasklist = Tasklist::find($id);
         $tasklist->delete();
 
-        return redirect('/index');
+        return redirect('/');
     }
 }
